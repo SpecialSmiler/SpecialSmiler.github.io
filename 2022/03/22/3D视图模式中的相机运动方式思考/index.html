@@ -19,23 +19,30 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.10.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="SpecialSmiler">
-<meta property="og:url" content="http://example.com/index.html">
+    <meta name="description" content="在计算机图形学中，相机其实是一个虚构的东西，并不是真的有一个实实在在的相机在三维空间中，我们只是在三维空间中，定义了一个点，来表示我们的相机。这个点具有Position、Rotation和Scale的值，我们需要通过这些值来确定View矩阵。然后我们还得设置FOV、Near、Far这些值，来确定我们视野所形成的视锥体，通过这些值来决定Projection矩阵。 在使用Blender的时候，我观">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3D视图模式中的相机运动方式思考">
+<meta property="og:url" content="http://example.com/2022/03/22/3D%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%9B%B8%E6%9C%BA%E8%BF%90%E5%8A%A8%E6%96%B9%E5%BC%8F%E6%80%9D%E8%80%83/index.html">
 <meta property="og:site_name" content="SpecialSmiler">
+<meta property="og:description" content="在计算机图形学中，相机其实是一个虚构的东西，并不是真的有一个实实在在的相机在三维空间中，我们只是在三维空间中，定义了一个点，来表示我们的相机。这个点具有Position、Rotation和Scale的值，我们需要通过这些值来确定View矩阵。然后我们还得设置FOV、Near、Far这些值，来确定我们视野所形成的视锥体，通过这些值来决定Projection矩阵。 在使用Blender的时候，我观">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/03/22/3D%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%9B%B8%E6%9C%BA%E8%BF%90%E5%8A%A8%E6%96%B9%E5%BC%8F%E6%80%9D%E8%80%83/image-20220322211845649.png">
+<meta property="og:image" content="http://example.com/2022/03/22/3D%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%9B%B8%E6%9C%BA%E8%BF%90%E5%8A%A8%E6%96%B9%E5%BC%8F%E6%80%9D%E8%80%83/image-20220322214509322.png">
+<meta property="article:published_time" content="2022-03-22T09:16:25.000Z">
+<meta property="article:modified_time" content="2022-03-22T16:47:48.089Z">
 <meta property="article:author" content="Special Smiler">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/03/22/3D%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%9B%B8%E6%9C%BA%E8%BF%90%E5%8A%A8%E6%96%B9%E5%BC%8F%E6%80%9D%E8%80%83/image-20220322211845649.png">
 
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2022/03/22/3D%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%9B%B8%E6%9C%BA%E8%BF%90%E5%8A%A8%E6%96%B9%E5%BC%8F%E6%80%9D%E8%80%83/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"en","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2022/03/22/3D%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%9B%B8%E6%9C%BA%E8%BF%90%E5%8A%A8%E6%96%B9%E5%BC%8F%E6%80%9D%E8%80%83/","path":"2022/03/22/3D视图模式中的相机运动方式思考/","title":"3D视图模式中的相机运动方式思考"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>SpecialSmiler</title>
+<title>3D视图模式中的相机运动方式思考 | SpecialSmiler</title>
   
 
 
@@ -65,7 +72,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">SpecialSmiler</h1>
+      <p class="site-title">SpecialSmiler</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -160,149 +167,17 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/exusiai.png">
-      <meta itemprop="name" content="Special Smiler">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="SpecialSmiler">
-      <meta itemprop="description" content="">
-    </span>
-    
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | SpecialSmiler">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/" class="post-title-link" itemprop="url">四边面和多边面的线框渲染</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2022-03-22 23:31:56" itemprop="dateCreated datePublished" datetime="2022-03-22T23:31:56+08:00">2022-03-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-03-23 00:47:37" itemprop="dateModified" datetime="2022-03-23T00:47:37+08:00">2022-03-23</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <span id="more"></span>
-
-<p>最近这半年比较沉迷建模，想着有什么地方可以看一些大佬的作品。然后就找到了<a target="_blank" rel="noopener" href="https://sketchfab.com/">Sketchfab</a>这个网站。</p>
-<p>先讲一些题外话。Sketchfab有一个很厉害的网页3d模型查看器，渲染效果相当好，而且性能消耗也很小，只有在视图变换的时候会进行GPU运算，当你不动视角得时候，GPU也不会动。之前都使熟悉游戏开发多一点，对于游戏来讲当然要每时每刻都进行渲染，使劲让CPU和GPU跑，能输出多少帧就输出多少帧。但是对于3d模型查看器来说，视角不动的时候就不需要每时每刻都渲染了。然后我想了想，Blender也是这样，动一下Viewport，GPU就开始跑，开始采样，采样够了，就停下。以后更加深入学习再好好想想这种功能该怎么做。</p>
-<p>Sketchfab的模型查看器中还有一个功能，就是显示模型的线框，这样就可以学习大佬们的模型布线。</p>
-<!--more-->
-
-<div class="sketchfab-embed-wrapper"> <iframe title="Hollow Knight" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="640" height="480" src="https://sketchfab.com/models/ae2d2db1a9674a9d8746c2832c5d1f87/embed"> </iframe> <p align="center" style="font-size: 13px; font-weight: normal; margin: 5px; color: #4A4A4A;"> <a href="https://sketchfab.com/3d-models/hollow-knight-ae2d2db1a9674a9d8746c2832c5d1f87?utm_medium=embed&utm_campaign=share-popup&utm_content=ae2d2db1a9674a9d8746c2832c5d1f87" target="_blank" style="font-weight: bold; color: #1CAAD9;"> Hollow Knight </a> by <a href="https://sketchfab.com/tlal?utm_medium=embed&utm_campaign=share-popup&utm_content=ae2d2db1a9674a9d8746c2832c5d1f87" target="_blank" style="font-weight: bold; color: #1CAAD9;"> Tlal </a> on <a href="https://sketchfab.com?utm_medium=embed&utm_campaign=share-popup&utm_content=ae2d2db1a9674a9d8746c2832c5d1f87" target="_blank" style="font-weight: bold; color: #1CAAD9;">Sketchfab</a></p></div>
-
-
-
-<p>但是我发现，这里显示的是四边形的线框。</p>
-<img src="/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/image-20220322234644618.png" class="" title="image-20220322234644618">
-
-
-
-<p>想到在OpenGL中绘制线框，设置glPolygonMode为LINES即可，但是渲染出的都是三角形</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">glDrawElements</span>(GL_LINES_STRIP, indices.<span class="built_in">size</span>(), GL_UNSIGNED_INT, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-
-<img src="/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/image-20220322235117551.png" class="" title="image-20220322235117551">
-
-<p>想来也是，对于图形渲染来说，必须是要以三角形作为单位，因为三个点能严格地确定一个平面，以保证渲染的准确。所以直接让OpenGL渲染线框，当然是渲染出三角形线框。但是在建模软件里为什么能渲染Quad或者N-gons面呢？我猜肯定是在某个地方存了Mesh的Edge信息。</p>
-<img src="/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/image-20220322235726755.png" class="" title="image-20220322235726755">
-
-<p>拿最简单的obj文件来说。obj里面保存了Vertex和Face的信息，但没有Edge的信息。顶点信息有位置(x, y, z)，而Face只是记录对Vertex的索引。在维基百科上看obj条目的时候，我看到了我最想要的话：</p>
-<blockquote>
-<h3 id="Face-elements"><a href="#Face-elements" class="headerlink" title="Face elements"></a>Face elements</h3><p>…Polygons such as quadrilaterals can be defined by using more than three indices.</p>
-</blockquote>
-<p>也就是说，obj文件中的Face对Vertex的索引可以超过三个，也就是说obj可以存储四边面和多边面。</p>
-<h2 id="生成EdgeIndices"><a href="#生成EdgeIndices" class="headerlink" title="生成EdgeIndices"></a>生成EdgeIndices</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Mesh</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;Vertex&gt;       vertices;</span><br><span class="line">    vector&lt;<span class="type">unsigned</span> <span class="type">int</span>&gt; indices;</span><br><span class="line">    vector&lt;Texture&gt;      textures;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WireframeMesh</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;Vertex&gt;       vertices;</span><br><span class="line">    vector&lt;<span class="type">unsigned</span> <span class="type">int</span>&gt; edgeIndices;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Model::loadModel</span><span class="params">(string <span class="type">const</span>&amp; path)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Assimp::Importer <span class="keyword">import</span>;</span><br><span class="line">    <span class="type">const</span> aiScene* scene = <span class="keyword">import</span>.<span class="built_in">ReadFile</span>(path, aiProcess_Triangulate | aiProcess_FlipUVs);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!scene || scene-&gt;mFlags &amp; AI_SCENE_FLAGS_INCOMPLETE || !scene-&gt;mRootNode)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;ERROR::ASSIMP::&quot;</span> &lt;&lt; <span class="keyword">import</span>.<span class="built_in">GetErrorString</span>() &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    directory = path.<span class="built_in">substr</span>(<span class="number">0</span>, path.<span class="built_in">find_last_of</span>(<span class="string">&#x27;\\&#x27;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="built_in">processNode</span>(scene-&gt;mRootNode, scene);</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> aiScene* wireframeScene = <span class="keyword">import</span>.<span class="built_in">ReadFile</span>(path, aiProcess_FlipUVs);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!wireframeScene || wireframeScene-&gt;mFlags &amp; AI_SCENE_FLAGS_INCOMPLETE || !wireframeScene-&gt;mRootNode)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;ERROR::ASSIMP::&quot;</span> &lt;&lt; <span class="string">&quot;Load wireframe error::&quot;</span> &lt;&lt; <span class="keyword">import</span>.<span class="built_in">GetErrorString</span>() &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">processWireframeNode</span>(wireframeScene-&gt;mRootNode, wireframeScene);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>本来想着在一个Mesh类中同时存储edgeIndices和faceIndices，但是assimp是通过一个树形结构来管理加载的整个模型的，所以在处理mesh的时候需要进行递归，遍历所有的node，从而处理所有的Mesh。为了提取三角化之前的边数据，一开始import的时候没有进行三角化处理，但是最终想要渲染的话还是必须进行三角化处理的，assimp又不支持单独对某个面进行三角化处理，就很难受，只能启用Triangulate再import一次，在新的scene上在此递归遍历。</p>
-<p>说实在的，obj文件很简单，只是一个文本文件，完全可以自己手写加载器，但是……懒嘛。以后有机会再说。或者也可以找找看有没有其他更合适的模型加载库。</p>
-<h2 id="绘制线框"><a href="#绘制线框" class="headerlink" title="绘制线框"></a>绘制线框</h2><img src="/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/Image34.gif" class="" title="img">
-
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//事先指定以下PolygonMode</span></span><br><span class="line"><span class="built_in">glPolygonMode</span>(GL_FRONT_AND_BACK, GL_LINE);</span><br><span class="line"><span class="comment">//或者在Draw的时候指定</span></span><br><span class="line"><span class="built_in">glDrawElements</span>(GL_LINES, indices.<span class="built_in">size</span>(), GL_UNSIGNED_INT, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-
-<p>绘制线框的时候使用<code>GL_LINES</code>，每次只画一根线，每画一根线需要消耗两个index，所以前面生成EdgeIndices的时候要这样：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">unsigned</span> <span class="type">int</span> i = <span class="number">0</span>; i &lt; mesh-&gt;mNumFaces; i++)</span><br><span class="line">&#123;</span><br><span class="line">    aiFace face = mesh-&gt;mFaces[i];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">unsigned</span> <span class="type">int</span> j = <span class="number">0</span>; j &lt; face.mNumIndices; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        indices.<span class="built_in">push_back</span>(face.mIndices[j]);</span><br><span class="line">        indices.<span class="built_in">push_back</span>(face.mIndices[(j + <span class="number">1</span>) % face.mNumIndices]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>通过Face信息来生成Edge信息，每次For循环都往EdgeIndices容器中插入两个元素，而且要取模运算，保证在最后一个Index与第一个Index相连。</p>
-<img src="/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/image-20220323003212418.png" class="" title="image-20220323003212418">
-
-<h2 id="PolygonOffset"><a href="#PolygonOffset" class="headerlink" title="PolygonOffset"></a>PolygonOffset</h2><p>只显示线框的话，会看到背面的线，搞得人眼花缭乱。继续模仿Sketchfab，在线框底下渲染纯色的<code>GL_TRIANGLE</code></p>
-<p>然后就出现了Z-fighting……</p>
-<img src="/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/image-20220323003438161.png" class="" title="image-20220323003438161">
-
-<p>给FILL添加一个DepthOffset</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">glEnable</span>(GL_POLYGON_OFFSET_FILL);</span><br><span class="line"><span class="built_in">glPolygonOffset</span>(<span class="number">1.0f</span>, <span class="number">1.0f</span>);</span><br></pre></td></tr></table></figure>
-
-<p>问题解决：</p>
-<img src="/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/image-20220323002428431.png" class="" title="image-20220323002428431">
-
-<p>奇怪的是我设置<code>LINE</code>的Offset，并没有用。</p>
-<p>原来是因为我画线框用的是<code>LINES</code>，和<code>LINE</code>不是一个东西，服了。只有<code>GL_POLYGON_OFFSET_LINE</code>，没有<code>GL_POLYGON_OFFSET_LINES</code> </p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">glEnable</span>(GL_POLYGON_OFFSET_LINE); <span class="comment">// doesn&#x27;t work for GL_LINES, only work for GL_LINE</span></span><br><span class="line"><span class="built_in">glPolygonOffset</span>(<span class="number">1.0f</span>, <span class="number">1.0f</span>);</span><br></pre></td></tr></table></figure>
-
-<p>所以还是直接设置<code>FILL</code>的offset就完事了。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/22/3D%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%9B%B8%E6%9C%BA%E8%BF%90%E5%8A%A8%E6%96%B9%E5%BC%8F%E6%80%9D%E8%80%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -316,13 +191,13 @@
     </span>
     
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | SpecialSmiler">
+      <meta itemprop="name" content="3D视图模式中的相机运动方式思考 | SpecialSmiler">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/03/22/3D%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%9B%B8%E6%9C%BA%E8%BF%90%E5%8A%A8%E6%96%B9%E5%BC%8F%E6%80%9D%E8%80%83/" class="post-title-link" itemprop="url">3D视图模式中的相机运动方式思考</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          3D视图模式中的相机运动方式思考
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -352,7 +227,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <span id="more"></span>
+        <span id="more"></span>
 
 <p>在计算机图形学中，相机其实是一个虚构的东西，并不是真的有一个实实在在的相机在三维空间中，我们只是在三维空间中，定义了一个点，来表示我们的相机。这个点具有Position、Rotation和Scale的值，我们需要通过这些值来确定View矩阵。然后我们还得设置FOV、Near、Far这些值，来确定我们视野所形成的视锥体，通过这些值来决定Projection矩阵。</p>
 <p>在使用Blender的时候，我观察到视图相机的运动规律：</p>
@@ -389,7 +264,6 @@
 
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">EnableWalkMode</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    PivotPos = CameraPos;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">DisableWalkMode</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    PivotPos = CameraPos + DistanceToPivot * Front;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">updateCamPosVecWalk</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    CameraPos = PivotPos;<span class="comment">//移动的时候，使Camera完全和Pivot重合</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-      
     </div>
 
     
@@ -397,11 +271,22 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/" rel="next" title="四边面和多边面的线框渲染">
+                  四边面和多边面的线框渲染 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
     </footer>
   </article>
 </div>
+
 
 
 

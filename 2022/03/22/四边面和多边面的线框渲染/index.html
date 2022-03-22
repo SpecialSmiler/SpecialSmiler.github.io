@@ -19,23 +19,35 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.10.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="SpecialSmiler">
-<meta property="og:url" content="http://example.com/index.html">
+    <meta name="description" content="最近这半年比较沉迷建模，想着有什么地方可以看一些大佬的作品。然后就找到了Sketchfab这个网站。 先讲一些题外话。Sketchfab有一个很厉害的网页3d模型查看器，渲染效果相当好，而且性能消耗也很小，只有在视图变换的时候会进行GPU运算，当你不动视角得时候，GPU也不会动。之前都使熟悉游戏开发多一点，对于游戏来讲当然要每时每刻都进行渲染，使劲让CPU和GPU跑，能输出多少帧就输出多少帧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="四边面和多边面的线框渲染">
+<meta property="og:url" content="http://example.com/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/index.html">
 <meta property="og:site_name" content="SpecialSmiler">
+<meta property="og:description" content="最近这半年比较沉迷建模，想着有什么地方可以看一些大佬的作品。然后就找到了Sketchfab这个网站。 先讲一些题外话。Sketchfab有一个很厉害的网页3d模型查看器，渲染效果相当好，而且性能消耗也很小，只有在视图变换的时候会进行GPU运算，当你不动视角得时候，GPU也不会动。之前都使熟悉游戏开发多一点，对于游戏来讲当然要每时每刻都进行渲染，使劲让CPU和GPU跑，能输出多少帧就输出多少帧。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/image-20220322234644618.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/image-20220322235117551.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/image-20220322235726755.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/Image34.gif">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/image-20220323003212418.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/image-20220323003438161.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/image-20220323002428431.png">
+<meta property="article:published_time" content="2022-03-22T15:31:56.000Z">
+<meta property="article:modified_time" content="2022-03-22T16:47:37.244Z">
 <meta property="article:author" content="Special Smiler">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/image-20220322234644618.png">
 
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"en","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/","path":"2022/03/22/四边面和多边面的线框渲染/","title":"四边面和多边面的线框渲染"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>SpecialSmiler</title>
+<title>四边面和多边面的线框渲染 | SpecialSmiler</title>
   
 
 
@@ -65,7 +77,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">SpecialSmiler</h1>
+      <p class="site-title">SpecialSmiler</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -99,7 +111,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -112,6 +124,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Face-elements"><span class="nav-number">1.</span> <span class="nav-text">Face elements</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90EdgeIndices"><span class="nav-number"></span> <span class="nav-text">生成EdgeIndices</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%98%E5%88%B6%E7%BA%BF%E6%A1%86"><span class="nav-number"></span> <span class="nav-text">绘制线框</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PolygonOffset"><span class="nav-number"></span> <span class="nav-text">PolygonOffset</span></a></div>
         </div>
         <!--/noindex-->
 
@@ -160,16 +173,17 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -183,13 +197,13 @@
     </span>
     
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | SpecialSmiler">
+      <meta itemprop="name" content="四边面和多边面的线框渲染 | SpecialSmiler">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/03/22/%E5%9B%9B%E8%BE%B9%E9%9D%A2%E5%92%8C%E5%A4%9A%E8%BE%B9%E9%9D%A2%E7%9A%84%E7%BA%BF%E6%A1%86%E6%B8%B2%E6%9F%93/" class="post-title-link" itemprop="url">四边面和多边面的线框渲染</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          四边面和多边面的线框渲染
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -219,7 +233,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <span id="more"></span>
+        <span id="more"></span>
 
 <p>最近这半年比较沉迷建模，想着有什么地方可以看一些大佬的作品。然后就找到了<a target="_blank" rel="noopener" href="https://sketchfab.com/">Sketchfab</a>这个网站。</p>
 <p>先讲一些题外话。Sketchfab有一个很厉害的网页3d模型查看器，渲染效果相当好，而且性能消耗也很小，只有在视图变换的时候会进行GPU运算，当你不动视角得时候，GPU也不会动。之前都使熟悉游戏开发多一点，对于游戏来讲当然要每时每刻都进行渲染，使劲让CPU和GPU跑，能输出多少帧就输出多少帧。但是对于3d模型查看器来说，视角不动的时候就不需要每时每刻都渲染了。然后我想了想，Blender也是这样，动一下Viewport，GPU就开始跑，开始采样，采样够了，就停下。以后更加深入学习再好好想想这种功能该怎么做。</p>
@@ -278,7 +292,6 @@
 
 <p>所以还是直接设置<code>FILL</code>的offset就完事了。</p>
 
-      
     </div>
 
     
@@ -286,122 +299,22 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/03/22/3D%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%9B%B8%E6%9C%BA%E8%BF%90%E5%8A%A8%E6%96%B9%E5%BC%8F%E6%80%9D%E8%80%83/" rel="prev" title="3D视图模式中的相机运动方式思考">
+                  <i class="fa fa-chevron-left"></i> 3D视图模式中的相机运动方式思考
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
     </footer>
   </article>
 </div>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/22/3D%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%9B%B8%E6%9C%BA%E8%BF%90%E5%8A%A8%E6%96%B9%E5%BC%8F%E6%80%9D%E8%80%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/exusiai.png">
-      <meta itemprop="name" content="Special Smiler">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="SpecialSmiler">
-      <meta itemprop="description" content="">
-    </span>
-    
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | SpecialSmiler">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/03/22/3D%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%9B%B8%E6%9C%BA%E8%BF%90%E5%8A%A8%E6%96%B9%E5%BC%8F%E6%80%9D%E8%80%83/" class="post-title-link" itemprop="url">3D视图模式中的相机运动方式思考</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2022-03-22 17:16:25" itemprop="dateCreated datePublished" datetime="2022-03-22T17:16:25+08:00">2022-03-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-03-23 00:47:48" itemprop="dateModified" datetime="2022-03-23T00:47:48+08:00">2022-03-23</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <span id="more"></span>
-
-<p>在计算机图形学中，相机其实是一个虚构的东西，并不是真的有一个实实在在的相机在三维空间中，我们只是在三维空间中，定义了一个点，来表示我们的相机。这个点具有Position、Rotation和Scale的值，我们需要通过这些值来确定View矩阵。然后我们还得设置FOV、Near、Far这些值，来确定我们视野所形成的视锥体，通过这些值来决定Projection矩阵。</p>
-<p>在使用Blender的时候，我观察到视图相机的运动规律：</p>
-<ul>
-<li>当水平拖动鼠标的时候，它会绕着穿过物体的与世界Z轴平行的一个轴进行旋转；</li>
-<li>当竖直拖动鼠标的时候，它会绕着穿过物体的，与视角水平方向平行的一个轴进行旋转</li>
-</ul>
-<video controls autoplay loop muted>
-    <source src="/resources/video/blender_YcqjnASP9s.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-</video>
-
-</video>
-
-<p>可以设想相机绕着一个轴心点（pivot）进行旋转。或者还可以说相机是这个Pivot的子物体，这样就更好理解了。我们并不需要让相机主动地去旋转，我们只要旋转Pivot，相机就会跟着被甩动。而且值得注意的是，无论我们怎么旋转Pivot，相机的Local XYZ轴和Pivot的Local XYZ轴是完全相对应的。</p>
-<img src="/2022/03/22/3D%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%9B%B8%E6%9C%BA%E8%BF%90%E5%8A%A8%E6%96%B9%E5%BC%8F%E6%80%9D%E8%80%83/image-20220322211845649.png" class="" title="image-20220322211845649">
-
-<video controls autoplay loop muted>
-    <source src="/resources/video/blender_CLjTQDqeMI.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-</video>
-
-</video>
-
-
-
-<p>在LearnOpenGL的<a target="_blank" rel="noopener" href="https://learnopengl.com/Getting-started/Camera">Camera章节</a>中，制作的是第一人称视角的相机，Pitch、Yaw等都作用在相机本身，然后相机旋转的时候，就直接改变Pitch和Yaw，以此计算相机的三个坐标轴朝向（Front、Up、Right）。现在要将这些参数搬到Pivot上，其实完全不用担心，因为Camera和Pivot的Pitch、Yaw都是完完全全同步的。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Camera</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    glm::vec3 CameraPos;</span><br><span class="line">    glm::vec3 PivotPos;</span><br><span class="line">    glm::vec3 WorldUp;</span><br><span class="line">    glm::vec3 Front;</span><br><span class="line">    glm::vec3 Up;</span><br><span class="line">    glm::vec3 Right;</span><br><span class="line">    <span class="type">float</span> Yaw;</span><br><span class="line">    <span class="type">float</span> Pitch;</span><br><span class="line">    <span class="type">float</span> Zoom;</span><br><span class="line"></span><br><span class="line">    <span class="type">float</span> DistanceToPivot;</span><br><span class="line">    <span class="type">const</span> <span class="type">float</span> MinDistance = <span class="number">0.1f</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">float</span> MaxDistance = <span class="number">15.0f</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">TurntableRotate</span><span class="params">(<span class="type">float</span> xoffset, <span class="type">float</span> yoffset)</span><span class="comment">//接收鼠标输入</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">float</span> factor = <span class="number">0.5f</span>;</span><br><span class="line">        xoffset *= factor;</span><br><span class="line">        yoffset *= factor;</span><br><span class="line"></span><br><span class="line">        Yaw += xoffset;</span><br><span class="line">        Pitch += yoffset;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (Pitch &gt; <span class="number">89.0f</span>)	<span class="comment">//Avoid gimbal lock</span></span><br><span class="line">            Pitch = <span class="number">89.0f</span>;</span><br><span class="line">        <span class="keyword">if</span> (Pitch &lt; <span class="number">-89.0f</span>)</span><br><span class="line">            Pitch = <span class="number">-89.0f</span>;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">updateCamDirVec</span>();</span><br><span class="line">        <span class="built_in">updateCamPosVecTurntable</span>();</span><br><span class="line">        <span class="comment">//std::cout &lt;&lt; &quot;Yaw: &quot; &lt;&lt; Yaw &lt;&lt; &quot; Pitch: &quot; &lt;&lt; Pitch &lt;&lt; std::endl;</span></span><br><span class="line">        <span class="comment">//debugLogVec3(Front);</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">updateCamPosVecTurntable</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        CameraPos = PivotPos - DistanceToPivot * Front;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">updateCamDirVec</span><span class="params">()</span><span class="comment">//参考LearnOpenGL中Camera章节的代码</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        glm::vec3 front;</span><br><span class="line">        front.x = <span class="built_in">cos</span>(glm::<span class="built_in">radians</span>(Yaw)) * <span class="built_in">cos</span>(glm::<span class="built_in">radians</span>(Pitch));</span><br><span class="line">        front.y = <span class="built_in">sin</span>(glm::<span class="built_in">radians</span>(Pitch));</span><br><span class="line">        front.z = <span class="built_in">sin</span>(glm::<span class="built_in">radians</span>(Yaw)) * <span class="built_in">cos</span>(glm::<span class="built_in">radians</span>(Pitch));</span><br><span class="line">        Front = glm::<span class="built_in">normalize</span>(front);</span><br><span class="line">        Right = glm::<span class="built_in">normalize</span>(glm::<span class="built_in">cross</span>(Front, WorldUp));</span><br><span class="line">        Up = glm::<span class="built_in">normalize</span>(glm::<span class="built_in">cross</span>(Right, Front));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>扯这么多，再想想，其实法线本质上和原来的也差不了太多，就是从原来的第一人称相机的基础上，给相机沿着Front方向后退了一点的距离而已。如果现在又想切换回第一人称Walk模式，直接把Camara位置设为Pivot的位置即可。</p>
-<img src="/2022/03/22/3D%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%B8%AD%E7%9A%84%E7%9B%B8%E6%9C%BA%E8%BF%90%E5%8A%A8%E6%96%B9%E5%BC%8F%E6%80%9D%E8%80%83/image-20220322214509322.png" class="" title="image-20220322214509322">
-
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">EnableWalkMode</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    PivotPos = CameraPos;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">DisableWalkMode</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    PivotPos = CameraPos + DistanceToPivot * Front;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">updateCamPosVecWalk</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    CameraPos = PivotPos;<span class="comment">//移动的时候，使Camera完全和Pivot重合</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
 
 
 
